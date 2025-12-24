@@ -18,6 +18,7 @@ import ViewTaskDetails from './pages/User/ViewTaskDetails';
 import PrivateRoute from './routes/PrivateRoute.jsx';
 import UserProvider, { UserContext } from './context/userContext.jsx';
 import { Toaster } from 'react-hot-toast';
+import ChatBot from './components/ChatBot';
 
 const App = () => {
   return (
@@ -47,6 +48,7 @@ const App = () => {
           <Route path='/' element={<Root />} />
         </Routes>
       </Router>
+      <ChatBot />
     </div>
     <Toaster
       toastOptions={{

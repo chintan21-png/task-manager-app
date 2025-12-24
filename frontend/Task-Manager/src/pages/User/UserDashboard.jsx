@@ -68,7 +68,7 @@ const UserDashboard = () => {
 
   return (
     <DashboardLayOut activeMenu="Dashboard">
-      <div className='card mt-0 mb-4'> 
+      <div className='card mt-0 mb-4 bg-white/70 backdrop-blur-sm'>
         <div className='flex justify-between items-start'>
           <div>
             <h2 className='text-xl font-bold'>Good Morning! {user?.name}</h2>

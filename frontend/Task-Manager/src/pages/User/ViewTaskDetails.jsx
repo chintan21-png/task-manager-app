@@ -29,7 +29,7 @@ const ViewTaskDetails = () => {
         setTask(response.data);
       }
     } catch (error) {
-      console.error("Error fetching task:", error);
+      console.error('Error fetching task details:', error);
     }
   };
 
@@ -46,7 +46,6 @@ const ViewTaskDetails = () => {
           setTask(response.data?.task || task);
         }
       } catch (error) {
-        // Revert on error
         todoChecklist[index].completed = !todoChecklist[index].completed;
       }
     }
@@ -65,82 +64,80 @@ const ViewTaskDetails = () => {
     }
   }, [id]);
 
+  if (!task) return null;
+
   return (
     <DashboardLayout activeMenu="My Tasks">
       <div className="w-full min-h-screen bg-gray-50 p-4 md:p-6">
         <div className="max-w-6xl mx-auto">
-          {task && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 md:p-6">
-              <div className='flex items-center justify-between'>
-                <h2 className='text-xl md:text-2xl font-semibold text-gray-800'>{task.title}</h2>
-                <div className={`text-xs md:text-sm font-medium ${getStatusColor(task.status)} px-4 py-1.5 rounded-full`}>
-                  {task.status}
-                </div>
+          <div className="rounded-xl shadow-sm border border-gray-200 p-5 md:p-6 bg-white/70 backdrop-blur-sm">
+            <div className='flex items-center justify-between'>
+              <h2 className='text-xl md:text-2xl font-semibold text-gray-800'>{task.title}</h2>
+              <div className={`text-xs md:text-sm font-medium ${getStatusColor(task.status)} px-4 py-1.5 rounded-full`}>
+                {task.status}
               </div>
-              
-              <div className='mt-6'>
-                <InfoBox label="Description" value={task.description} />
-              </div>
-              
-              <div className='grid grid-cols-1 md:grid-cols-3 gap-5 mt-6'>
-                <div>
-                  <InfoBox label="Priority" value={task.priority} />
-                </div>
-                <div>
-                  <InfoBox 
-                    label="Due Date" 
-                    value={task.dueDate ? moment(task.dueDate).format("Do MMM YYYY") : "N/A"} 
-                  />
-                </div>
-                <div>
-                  <label className='text-xs font-medium text-slate-500 mb-2 block'>Assigned To</label>
-                  <AvatarGroup
-                    avatars={task.assignedTo?.map(item => item.profileImageUrl) || []}
-                    maxVisible={5}
-                  />
-                </div>
-              </div>
-              
-              {task.todoChecklist && task.todoChecklist.length > 0 && (
-                <div className='mt-6'>
-                  <label className='text-sm font-medium text-slate-700 mb-3 block'>Todo Checklist</label>
-                  <div className="bg-gray-50 rounded-lg p-3">
-                    {task.todoChecklist.map((item, index) => (
-                      <TodoCheckList
-                        key={`todo_${index}`}
-                        text={item.text}
-                        isChecked={item.completed}
-                        onChange={() => updateTodoChecklist(index)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {task.attachments?.length > 0 && (
-                <div className='mt-6'>
-                  <label className='text-sm font-medium text-slate-700 mb-3 block'>Attachments</label>
-                  <div className="space-y-3">
-                    {task.attachments.map((link, index) => (
-                      <Attachment
-                        key={`link_${index}`}
-                        link={link}
-                        index={index}
-                        onClick={() => handleLinkClick(link)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
-          )}
+            
+            <div className='mt-6'>
+              <InfoBox label="Description" value={task.description} />
+            </div>
+            
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-5 mt-6'>
+              <div>
+                <InfoBox label="Priority" value={task.priority} />
+              </div>
+              <div>
+                <InfoBox 
+                  label="Due Date" 
+                  value={task.dueDate ? moment(task.dueDate).format("Do MMM YYYY") : "N/A"} 
+                />
+              </div>
+              <div>
+                <label className='text-xs font-medium text-slate-500 mb-2 block'>Assigned To</label>
+                <AvatarGroup
+                  avatars={task.assignedTo?.map(item => item.profileImageUrl) || []}
+                  maxVisible={5}
+                />
+              </div>
+            </div>
+            
+            {task.todoChecklist && task.todoChecklist.length > 0 && (
+              <div className='mt-6'>
+                <label className='text-sm font-medium text-slate-700 mb-3 block'>Todo Checklist</label>
+                <div className="bg-gray-50 rounded-lg p-3">
+                  {task.todoChecklist.map((item, index) => (
+                    <TodoCheckList
+                      key={`todo_${index}`}
+                      text={item.text}
+                      isChecked={item.completed}
+                      onChange={() => updateTodoChecklist(index)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {task.attachments?.length > 0 && (
+              <div className='mt-6'>
+                <label className='text-sm font-medium text-slate-700 mb-3 block'>Attachments</label>
+                <div className="space-y-3">
+                  {task.attachments.map((link, index) => (
+                    <Attachment
+                      key={`link_${index}`}
+                      link={link}
+                      index={index}
+                      onClick={() => handleLinkClick(link)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </DashboardLayout>
   );
 };
-
-export default ViewTaskDetails;
 
 const InfoBox = ({ label, value }) => (
   <div className="mb-4">
@@ -162,13 +159,13 @@ const TodoCheckList = ({ text, isChecked, onChange }) => (
 );
 
 const Attachment = ({ link, index, onClick }) => {
-  // Extract domain from URL for display
   let displayLink = link;
   try {
     const url = new URL(link.includes('://') ? link : `https://${link}`);
     displayLink = url.hostname + url.pathname;
   } catch (e) {
     // If URL parsing fails, use the original link
+    console.error(e);
   }
   
   return (
@@ -186,3 +183,5 @@ const Attachment = ({ link, index, onClick }) => {
     </div>
   );
 };
+
+export default ViewTaskDetails;

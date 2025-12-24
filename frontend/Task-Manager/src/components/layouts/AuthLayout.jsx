@@ -2,8 +2,8 @@ import React from "react";
 import UI_IMG from "../../assets/images/auth-img.png";
 
 const AuthLayout = ({ children }) => {
-  return <div className="flex">
-    <div className="w-screen h-screen md:w-[60vw] px-12 pt-8 pb-12">
+  return <div className="flex min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="w-screen h-screen md:w-[60vw] px-12 pt-8 pb-12 bg-white/80 backdrop-blur-sm">
         <h2 className="text-lg font-medium text-black">Task Manager</h2>
         {children}
     </div>
